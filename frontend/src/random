@@ -1,0 +1,108 @@
+<template>
+  <div id="app">
+    <button @click="$vm2.open('modal-1')">Open normal modal</button>
+    <modal-vue
+      @on-close="$vm2.close('modal-1')"
+      name="modal-1"
+      :headerOptions="{
+        title: 'Want to delete this item?',
+      }"
+      :footerOptions="{
+        btn1: 'Cancel',
+        btn2: 'Delete',
+        btn2Style: {
+          backgroundColor: 'red',
+        },
+        btn2OnClick: () => {
+          doDelete();
+        },
+        btn1OnClick: () => {
+          $vm2.close('modal-1');
+        },
+      }"
+    >
+      This process cannot be undone
+    </modal-vue>
+
+    <button @click="$vm2.open('modal-2')">Open no footer modal</button>
+    <modal-vue
+      @on-close="$vm2.close('modal-2')"
+      name="modal-2"
+      :headerOptions="{
+        title: 'Informations',
+      }"
+      noFooter
+    >
+      <div>
+        <p>This modal has no footer</p>
+      </div>
+    </modal-vue>
+
+    <button @click="$vm2.open('modal-3')">Open no header modal</button>
+    <modal-vue
+      @on-close="$vm2.close('modal-3')"
+      name="modal-3"
+      noHeader
+      :footerOptions="{
+        btn1: 'Cancel',
+        btn2: 'Delete',
+        btn2Style: {
+          backgroundColor: 'red',
+        },
+        btn2OnClick: () => {
+          doDelete();
+        },
+        btn1OnClick: () => {
+          $vm2.close('modal-3');
+        },
+      }"
+    >
+      <div>
+        <p>Want to delete this?</p>
+      </div>
+    </modal-vue>
+
+    <button @click="$vm2.open('modal-4')">Open custom header & footer</button>
+    <modal-vue @on-close="$vm2.close('modal-4')" name="modal-4">
+      <template v-slot:header> This is custom header </template>
+      <template v-slot:footer>
+        <button @click="close">Close</button>
+      </template>
+      <div>
+        <p>Example of custom modal</p>
+      </div>
+    </modal-vue>
+    <a
+      target="_blank"
+      href="https://codesandbox.io/s/damp-architecture-b856k?file=/pages/index.vue"
+      >Nuxt example</a
+    >
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+  methods: {
+    doDelete() {
+      alert("deleted");
+      this.$vm2.close("modal-1");
+      this.$vm2.close("modal-3");
+    },
+    close() {
+      this.$vm2.close("modal-4");
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
