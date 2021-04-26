@@ -14,8 +14,13 @@ router.put("/:id", upload.single("image"), Controller.UpdatePostByID);
 
 router.delete("/deletePost", Controller.DeletePostByID);
 
-// router.delete("/", Auth, Controller.DeleteAllPost);
+router.put("/post/like", Controller.LikePost)
 
-router.get("/public", Auth, Controller.FindAllPublic)
+router.put("/post/comment", Controller.CommentOnPost)
 
 module.exports = router;
+
+// router.delete("/", Auth, Controller.DeleteAllPost);
+
+// router.get("/public", Auth, Controller.FindAllPublic)
+

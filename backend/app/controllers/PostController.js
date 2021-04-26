@@ -63,44 +63,50 @@ exports.FindPostByID = (req, res) => {
 };
 
 exports.UpdatePostByID = async(req, res) => {
-    if (!req.body) {
-        return res.status(400).send({
-            message: "Data to update can not be empty!"
-        });
-    }
 
-    let post = await Post.findById(req.params.id);
-
-    const id = req.params.id;
-
-    await cloudinary.uploader.destroy(post.cloudinary_id);
-
-    const data = {
-        title: req.body.title || post.title,
-        author: req.body.author || post.author,
-        caption: req.body.caption || post.caption,
-        visibility: req.body.visibility || post.visibility,
-    };
-
-    if (req.file.path) {
-        const result = await cloudinary.uploader.upload(req.file.path);
-        data.avatar = result.secure_url || post.avatar
-        data.cloudinary_id = result.public_id || post.cloudinary_id
-    }
-
-    Post.findByIdAndUpdate(id, data, { useFindAndModify: false })
-        .then(data => {
-            if (!data) {
-                res.status(404).send({
-                    message: `Cannot update Post with id=${id}. Maybe Post was not found!`
-                });
-            } else res.send({ message: "Post was updated successfully." });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating Post with id=" + id
+    try {
+        if (!req.body) {
+            return res.status(400).send({
+                message: "Data to update can not be empty!"
             });
-        });
+        }
+
+        let post = await Post.findById(req.params.id);
+
+        const id = req.params.id;
+
+        const data = {
+            title: req.body.title || post.title,
+            author: req.body.author || post.author,
+            caption: req.body.caption || post.caption,
+            visibility: req.body.visibility || post.visibility,
+        };
+
+        if (req.file.path) {
+            await cloudinary.uploader.destroy(post.cloudinary_id);
+            const result = await cloudinary.uploader.upload(req.file.path);
+            data.avatar = result.secure_url || post.avatar
+            data.cloudinary_id = result.public_id || post.cloudinary_id
+        }
+
+        Post.findByIdAndUpdate(id, data, { useFindAndModify: false })
+            .then(data => {
+                if (!data) {
+                    res.status(404).send({
+                        message: `Cannot update Post with id=${id}. Maybe Post was not found!`
+                    });
+                } else res.send({ message: "Post was updated successfully." });
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: "Error updating Post with id=" + id
+                });
+            });
+    }
+    catch (e) {
+        console.log(e)
+    }
+
 };
 
 exports.DeletePostByID = async (req, res) => {
@@ -156,3 +162,98 @@ exports.FindAllPublic = (req, res) => {
             });
         });
 };
+
+exports.LikePost = async (req, res) => {
+    try {
+        const postId = req.body.postId;
+        const userId = req.body.userId
+        console.log(userId)
+        console.log(postId)
+        const post = await Post.findById(postId)
+        if (post) {
+            let likes = post.likes ? post.likes : []
+            const found = likes.find(element => element === userId)
+            console.log(found)
+            if (found) {
+                const index = likes.indexOf(userId)
+                likes.splice(index, 1)
+            }
+            else {
+                likes.push(userId)
+            }
+            Post.findByIdAndUpdate(postId, {
+                likes: likes
+            }, { useFindAndModify: false }).then(data => {
+                if (!data) {
+                    res.status(404).send({
+                        message: `Cannot update Post with id=${id}. Maybe Post was not found!`
+                    });
+                } else res.send({ message: "Post was updated successfully." });
+            })
+                .catch(err => {
+                    res.status(500).send({
+                        message: "Error updating Post with id=" + id
+                    });
+                });
+        }
+        else {
+            res.status(404).send({
+                message: `Cannot update Post with id=${id}. Maybe Post was not found!`
+            });
+        }
+    }
+    catch (e) {
+        console.log(e)
+        res.status(500).send({
+            message: "Error updating Post with id=" + id
+        });
+    }
+}
+
+exports.CommentOnPost = async (req, res) => {
+    try {
+        const postId = req.body.postId;
+        const username = req.body.username;
+        const userId = req.body.userId;
+        const postComment =  req.body.postComment;
+        const commentId = Math.random().toString(36).substring(7)
+        const dateTimeNow = new Date()
+        const comment = {
+            username,
+            userId,
+            commentId,
+            postComment,
+            dateTimeNow
+        }
+        const post = await Post.findById(postId)
+        if (post) {
+            let comments = post.comments ? post.comments : []
+            comments.push(comment)
+            Post.findByIdAndUpdate(postId, {
+                comments: comments
+            }, { useFindAndModify: false }).then(data => {
+                if (!data) {
+                    res.status(404).send({
+                        message: `Cannot update Post with id=${id}. Maybe Post was not found!`
+                    });
+                } else res.send({ message: "Post was updated successfully." });
+            })
+                .catch(err => {
+                    res.status(500).send({
+                        message: "Error updating Post with id=" + id
+                    });
+                });
+        }
+        else {
+            res.status(404).send({
+                message: `Cannot update Post with id=${id}. Maybe Post was not found!`
+            });
+        }
+    }
+    catch (e) {
+        console.log(e)
+        res.status(500).send({
+            message: "Error updating Post with id=" + id
+        });
+    }
+}
