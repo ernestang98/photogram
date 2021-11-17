@@ -20,40 +20,98 @@
         <i class="icon far fa-user-circle"></i>
       </div>
     </nav>
-    <div class="posts">
-      <div v-for="lePost in posts" v-bind:key="lePost.id" style="padding: 50px 0 50px 0">
-        <!--      <div v-for="(lePost, i) in posts" v-bind:key='"lePost" + i'>-->
-        <div class="post card" style="width: 50rem; margin-left: auto; margin-right: auto">
-          <div class="card-header cardH">
-            <div style="display: flex;">
-              <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
-              <h3 style="padding: 10px 0 0 20px; font-size: 25px"><strong>{{ lePost.author }}</strong></h3>
-            </div>
+    <div class="main">
+      <div>
+        <div class="stories">
+          <div class="stories-bar">
             <div>
-              <img class="dots modalBtn" src="https://static.thenounproject.com/png/41104-200.png" alt="">
+              <div class="arrows">
+                <div class="left-arrow arrow">
+                  <i class="fas fa-caret-left"></i>
+                </div>
+                <div class="right-arrow arrow">
+                  <i class="fas fa-caret-right"></i>
+                </div>
+              </div>
+              <b-carousel
+                  id="carousel-1"
+                  v-model="slide"
+                  :interval="10000"
+                  controls
+                  fade
+                  background="#fff"
+                  img-width="1024"
+                  img-height="120"
+                  style="text-shadow: 1px 1px 2px #333;"
+                  @sliding-start="onSlideStart"
+                  @sliding-end="onSlideEnd"
+              >
+                <!-- Text slides with image -->
+                <b-carousel-slide caption="" img-blank img-alt="Blank image">
+                  <div class="one-slide-user-stories">
+                    <div class="user-stories">
+                      <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                    </div>
+                    <div class="user-stories">
+                      <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                    </div>
+                    <div class="user-stories">
+                      <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                    </div>
+                    <div class="user-stories">
+                      <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                    </div>
+                    <div class="user-stories">
+                      <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                    </div>
+                    <div class="user-stories">
+                      <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                    </div>
+                  </div>
+                </b-carousel-slide>
+              </b-carousel>
             </div>
           </div>
-          <img v-bind:src="lePost.avatar" class="card-img-top" alt="">
-          <div class="card-body" style="display: flex; font-size: 20px; justify-content: flex-start">
-            <p class="card-title" style="text-align: left"><strong>{{ lePost.author }}: </strong>{{lePost.caption}}</p>
-          </div>
-          <div class="modal">
-            <div class="modalContent">
-              <div class="option">
-                <p class="optionText">Report</p>
+        </div>
+        <div class="posts">
+          <div v-for="lePost in posts" v-bind:key="lePost.id" style="padding: 50px 0 50px 0">
+            <!--      <div v-for="(lePost, i) in posts" v-bind:key='"lePost" + i'>-->
+            <div class="post card" style="width: 40rem; margin-left: auto; margin-right: auto">
+              <div class="card-header cardH">
+                <div style="display: flex;">
+                  <img class="dp" src="https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg" alt="">
+                  <h3 style="padding: 15px 0 0 20px; font-size: 20px"><strong>{{ lePost.author }}</strong></h3>
+                </div>
+                <div>
+                  <img class="dots modalBtn" src="https://static.thenounproject.com/png/41104-200.png" alt="">
+                </div>
               </div>
-              <div class="option">
-                <p class="optionText">Go to user profile</p>
+              <img v-bind:src="lePost.avatar" class="card-img-top" alt="">
+              <div class="card-body" style="display: flex; font-size: 20px; justify-content: flex-start">
+                <p class="card-title" style="text-align: left"><strong>{{ lePost.author }}: </strong>{{lePost.caption}}</p>
               </div>
-              <div class="option" @click="editPost(lePost.id)">
-                <p class="optionText">Edit</p>
-              </div>
-              <div class="option" style="border-bottom: 1px gray solid" @click="deletePost(lePost.id)">
-                <p class="optionText">Delete</p>
+              <div class="modal">
+                <div class="modalContent">
+                  <div class="option">
+                    <p class="optionText">Report</p>
+                  </div>
+                  <div class="option">
+                    <p class="optionText">Go to user profile</p>
+                  </div>
+                  <div class="option" @click="editPost(lePost.id)">
+                    <p class="optionText">Edit</p>
+                  </div>
+                  <div class="option" style="border-bottom: 1px gray solid" @click="deletePost(lePost.id)">
+                    <p class="optionText">Delete</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        asdads
       </div>
     </div>
     <div>
@@ -243,7 +301,7 @@ nav {
 }
 
 .dots {
-  height: 50px
+  height: 40px
 }
 
 .modal {
@@ -291,5 +349,49 @@ nav {
   margin:0 auto;
   font-size: 20px;
 }
+.stories {
+  display: flex;
+  justify-content: center;
+}
 
+.stories-bar {
+  margin: 50px 0 0 0;
+  background-color: white !important;
+  display: flex;
+  justify-content: space-between;
+  width: 40rem !important;
+  /*height: 5rem;*/
+  border: 1px #e5e5e5 solid
+}
+.one-slide-user-stories {
+  display: flex;
+  justify-content: start;
+}
+.user-stories {
+  margin: 0 13px;
+  position: relative;
+  top: 28px;
+}
+.arrow {
+  position: relative;
+  top: 5px;
+  z-index: 10;
+  font-size: 50px;
+}
+.left-arrow {
+  padding-left: 30px;
+}
+.right-arrow {
+  padding-right: 30px;
+}
+.arrows {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  height: 1px;
+}
+.main {
+  display: grid;
+  grid-template-columns: 2fr 1fr
+}
 </style>

@@ -82,11 +82,15 @@ exports.UpdatePostByID = async(req, res) => {
             visibility: req.body.visibility || post.visibility,
         };
 
-        if (req.file.path) {
-            await cloudinary.uploader.destroy(post.cloudinary_id);
-            const result = await cloudinary.uploader.upload(req.file.path);
-            data.avatar = result.secure_url || post.avatar
-            data.cloudinary_id = result.public_id || post.cloudinary_id
+        try {
+            if (req.file.path) {
+                await cloudinary.uploader.destroy(post.cloudinary_id);
+                const result = await cloudinary.uploader.upload(req.file.path);
+                data.avatar = result.secure_url || post.avatar
+                data.cloudinary_id = result.public_id || post.cloudinary_id
+            }
+        } catch (e) {
+            console.log("ignore")
         }
 
         Post.findByIdAndUpdate(id, data, { useFindAndModify: false })
